@@ -86,8 +86,9 @@ def handle_data_request ():
     break
 
 
-  round(win_avg, 2), sorted_win_percentage = simulate_tournament(players, num_rounds, 10000)
+  win_avg, sorted_win_percentage = simulate_tournament(players, num_rounds, 10000)
 
+  win_avg = round(win_avg, 2)
 
   return jsonify({'sorted_win_percentage': sorted_win_percentage, 'win_avg': win_avg}), 200
 
