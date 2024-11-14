@@ -86,7 +86,6 @@ def handle_data_request ():
     std = get_std(rtgs)
     players[num]=(rtg, std, name)
 
-
   win_avg, cash_avg, sorted_win_percentage = simulate_tournament(players, num_rounds, 10000)
 
   win_avg = round(win_avg, 2)
