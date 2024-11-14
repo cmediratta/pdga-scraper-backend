@@ -64,7 +64,6 @@ def handle_data_request ():
   parser = etree.HTMLParser()
 
   e_id = request.json.get("t_id")
-  email = request.json.get("email")
   num_rounds = request.json.get("rounds")
   div = request.json.get("current_div")
 
@@ -88,9 +87,9 @@ def handle_data_request ():
     players[num]=(rtg, std, name)
 
 
-  win_avg, sorted_win_percentage = simulate_tournament(players, num_rounds, 10000)
+  win_avg, cash_avg, sorted_win_percentage = simulate_tournament(players, num_rounds, 10000)
 
   win_avg = round(win_avg, 2)
 
-  return jsonify({'sorted_win_percentage': sorted_win_percentage, 'win_avg': win_avg}), 200
+  return jsonify({'sorted_win_percentage': sorted_win_percentage, 'win_avg': win_avg, 'cash_avg': cash_avg}), 200
 

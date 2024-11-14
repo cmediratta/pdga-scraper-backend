@@ -1,4 +1,9 @@
 from statistics import NormalDist
+import math.ceil
+
+#Gets the number of places paid based on the number of players in the field (assumed PDGA standard 40% cash)
+def get_spots_paid(n):
+  return ceil(0.4*n)
 
 #Gets the Standard Deviation from a series of ratings
 def get_std(rtgs):
@@ -8,17 +13,22 @@ def get_std(rtgs):
   res = variance ** 0.5
   return res
 
-#Calculates the winner of a given simulated tournament given players standard deviation and rating
-def calculate_winner (rounds, players, dists):
+#Calculates a result of a given simulated tournament given players standard deviation and rating
+def calculate_result (rounds, players, dists):
 
   current_best = 0
   current_winner = ""
+  results = []
   for p in players:
     s = sum(dists[p].samples(rounds))/rounds
+    results.append[s]
     if (current_best < s):
       current_best = s
       current_winner = p
-  return current_winner, current_best
+  results.sort(reverse=True)
+  players_paid = get_spots_paid(players)
+
+  return current_winner, current_best, results[players_paid]
 
 #Calculates the result of N tournaments with a specified number of rounds and specified players
 def calculate_tournament (N, rounds, players):
@@ -31,19 +41,21 @@ def calculate_tournament (N, rounds, players):
     dists[p] = NormalDist(mu=players[p][0], sigma=players[p][1])
 
   winner_rating_sum = 0
+  cash_rating_sum = 0
   for n in range(N):
 
-    winner_number, winner_rating = calculate_winner(rounds, players, dists)
+    winner_number, winner_rating, cash_rating = calculate_round(rounds, players, dists)
 
     win_percentage[winner_number]+=100/N
     winner_rating_sum+=winner_rating/N
+    cash_rating_sum+=cash_rating/N
 
-  return winner_rating_sum, win_percentage
+  return winner_rating_sum, cash_rating_sum, win_percentage
 
 #Returns sorted/prettified version of the results
 def simulate_tournament(players, rounds, N):
 
-  avg, win_percentage = calculate_tournament(N, rounds, players)
+  avg, cash_avg, win_percentage = calculate_tournament(N, rounds, players)
 
   sorted_win_percentage = sorted(win_percentage.items(), key=lambda item: item[1], reverse=True)
   for i in range(len(sorted_win_percentage)):
@@ -51,4 +63,4 @@ def simulate_tournament(players, rounds, N):
 
   print(sorted_win_percentage)
 
-  return avg, sorted_win_percentage
+  return avg, cash_avg, sorted_win_percentage
