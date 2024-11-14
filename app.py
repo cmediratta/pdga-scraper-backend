@@ -6,7 +6,7 @@ from io import StringIO
 from time import sleep
 from utils import simulate_tournament, get_std
 app = Flask(__name__)
-CORS(app) #TODO, make it so only website can access endpoint
+cors = CORS(app)
 
 
 def get_request(link):
@@ -32,6 +32,9 @@ def get_rtgs(num):
 
   return rtgs
 
+@app.route("/")
+def hello_world ():
+  return "Hello World!"
 
 @app.route("/get-divisions", methods=['POST'])
 def get_divisions ():
@@ -83,7 +86,6 @@ def handle_data_request ():
     rtgs = get_rtgs(num)
     std = get_std(rtgs)
     players[num]=(rtg, std, name)
-    break
 
 
   win_avg, sorted_win_percentage = simulate_tournament(players, num_rounds, 10000)
@@ -91,12 +93,4 @@ def handle_data_request ():
   win_avg = round(win_avg, 2)
 
   return jsonify({'sorted_win_percentage': sorted_win_percentage, 'win_avg': win_avg}), 200
-
-  
-
-
-
-
-
-
 
