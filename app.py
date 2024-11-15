@@ -49,16 +49,23 @@ def get_divisions ():
 
   tree = etree.parse(StringIO(html), parser=parser)
   root = tree.getroot()
+
+  status = tree.xpath('//td[@class="status"]')
+  if (len(status)==0):
+    return jsonify({}), 556
+  if (status[0].text != "Sanctioned"):
+    return jsonify({}), 555
+
+
   divs = []
 
   for d in tree.xpath('//*[@class="division"]'):
     divs.append(d.get('id'))
 
-  return jsonify({'message': divs}), 200
+  return jsonify({'tournament_divisions': divs}), 200
 
 
 @app.route("/generate-report", methods=['POST'])
-
 def handle_data_request ():
 
   parser = etree.HTMLParser()
